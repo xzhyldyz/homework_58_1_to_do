@@ -3,7 +3,7 @@ from db import main_db
 from datetime import datetime as dt
 
 def main(page: ft.Page):
-    page.title = 'ToDo list'
+    page.title = 'ToDo List'
     page.theme_mode = ft.ThemeMode.LIGHT
 
     task_list = ft.Column(spacing=10)
@@ -45,13 +45,16 @@ def main(page: ft.Page):
         return ft.Row([checkbox, task_field, edit_button, save_button, delete_button])
 
     def add_task(_):
-        if task_input.value:
+        if task_input.value and len(task_input.value) < 100:
             task = f"{dt.now().strftime('%H:%M:%S')}-{task_input.value}"
             task_id = main_db.add_task(task)
             task_list.controls.append(create_task_row(task_id=task_id, task_text=task, completed=None))
 
             task_input.value = ''
-            page.update()
+        else:
+            task_input.error_text= "Не больше 100 символов!"
+        page.update()
+            
 
     def toggle_task(task_id, is_completed):
         main_db.update_task(task_id=task_id, completed=int(is_completed))
@@ -68,7 +71,7 @@ def main(page: ft.Page):
         ft.ElevatedButton("Готово", on_click=lambda e: set_filter('completed'))
     ], alignment=ft.MainAxisAlignment.SPACE_EVENLY)
 
-    task_input = ft.TextField(label='Введите новую задачу', expand=True, max_length=10)
+    task_input = ft.TextField(label='Введите новую задачу', expand=True)
     add_button = ft.IconButton(icon=ft.Icons.ADD, tooltip='Добавить задачу', on_click=add_task)
 
     page.add(ft.Row([task_input, add_button]),filter_buttons, task_list)
