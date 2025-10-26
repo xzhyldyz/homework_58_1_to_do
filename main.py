@@ -68,7 +68,7 @@ def main(page: ft.Page):
         ft.ElevatedButton("Готово", on_click=lambda e: set_filter('completed'))
     ], alignment=ft.MainAxisAlignment.SPACE_EVENLY)
 
-    task_input = ft.TextField(label='Введите новую задачу', expand=True)
+    task_input = ft.TextField(label='Введите новую задачу', expand=True, max_length=10)
     add_button = ft.IconButton(icon=ft.Icons.ADD, tooltip='Добавить задачу', on_click=add_task)
 
     page.add(ft.Row([task_input, add_button]),filter_buttons, task_list)
